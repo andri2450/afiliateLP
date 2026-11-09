@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rekomendasi Produk Pilihan</title>
+<meta name="description" content="Kumpulan rekomendasi produk Shopee pilihan.">
+<style>
+:root{--bg:#fafafa;--c:#fff;--t:#1c1c1c;--m:#666;--a:#ee4d2d;--b:#e8e8e8}
+@media(prefers-color-scheme:dark){:root{--bg:#121212;--c:#1d1d1d;--t:#f2f2f2;--m:#a0a0a0;--b:#333}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t)}
+header{text-align:center;padding:40px 16px 16px}h1{margin:0 0 6px;font-size:1.7rem}header p{margin:0;color:var(--m)}
+main{max-width:1100px;margin:auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--b)}
+.in{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.in h2{font-size:1rem;margin:0}.in p{margin:0;color:var(--m);font-size:.88rem;flex:1}
+.pr{color:var(--a);font-weight:700;font-size:1.1rem}
+.btn{display:block;text-align:center;background:var(--a);color:#fff;text-decoration:none;padding:10px;border-radius:8px;font-weight:600}
+footer{text-align:center;color:var(--m);font-size:.8rem;padding:24px 16px}
+</style></head><body>
+<header><h1>Rekomendasi Produk Pilihan</h1><p>Produk Shopee yang kami pilih untukmu</p></header>
+<main id="g"><p style="grid-column:1/-1;text-align:center;color:var(--m)">Memuat…</p></main>
+<footer>Halaman ini berisi link afiliasi. Kami bisa mendapat komisi tanpa biaya tambahan untukmu.</footer>
+<script>
+const rp=n=>n?'Rp'+Number(n).toLocaleString('id-ID'):'';
+const e=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('/api/products').then(r=>r.json()).then(l=>{
+  const g=document.getElementById('g');
+  if(!l.length){g.innerHTML='<p style="grid-column:1/-1;text-align:center">Belum ada produk.</p>';return}
+  g.innerHTML=l.map(p=>`<div class="card">${p.image?`<img src="${e(p.image)}" alt="${e(p.title)}" loading="lazy" referrerpolicy="no-referrer">`:''}
+  <div class="in"><h2>${e(p.title)}</h2><div class="pr">${e(rp(p.price))}</div><p>${e(p.description)}</p>
+  <a class="btn" href="${e(p.link)}" target="_blank" rel="sponsored nofollow noopener">Beli di Shopee</a></div></div>`).join('');
+}).catch(()=>{document.getElementById('g').textContent='Gagal memuat produk.'});
+</script></body></html>
